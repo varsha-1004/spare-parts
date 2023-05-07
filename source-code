@@ -1,0 +1,103 @@
+import os
+import pickle
+#writing operation
+def insert():
+    sno=int(input("enter serial number"))
+    carn=input("enter car name")
+    spare=input("enter spare part to be replaced")
+    amt=int(input("enter the cost"))
+    r={"Serialno":sno,"Car":carn,"Spare":spare,"Cost":amt}
+    f=open("auto.dat","ab")
+    pickle.dump(r,f)
+    f.close()
+#reading the records
+def read():
+    f=open("auto.dat","rb")
+    r=pickle.load(f)
+    print("Sno:",r['Serialno'])
+    print("Car:",r['Car'])
+    print("Spare:",r['Spare'])
+    print("Cost:",r['Cost'])
+    f.close()
+#searching a record
+def search(a):
+    f=open("auto.dat","rb")
+    c=False
+    while True:
+        try:
+            r=pickle.load(f)
+            if r['Car']==a:
+            print("Serial number:",r['Serialno'])
+            print("Car:",r['Car'])
+            print("Spare:",r['Spare'])
+            print("Cost",r['Cost'])
+            c=True
+        except EOFError:
+            break
+    if c==False:
+    print("No Record Found")
+    f.close()
+ 
+#updating a record
+def update(r,m):
+    f=open("auto.dat","rb")
+    a=[]
+    while True:
+        try:
+            s=pickle.load(f)
+            a.append(s)
+        except EOFError:
+            break
+    f.close()
+    for i in range(len(a)):
+        if a[i]['Serialno']==r:
+        a[i]['Car']=m
+    f=open("auto.dat","wb")
+    for x in a:
+        pickle.dump(x,f)
+ f.close()
+#deleted record
+def delete(d):
+    f=open("auto.dat","rb")
+    r=[]
+    while True:
+        try:
+            rec=pickle.load(f)
+            r.append(rec)
+        except EOFError:
+            break
+    f.close()
+    f=open("auto.dat","wb")
+    for x in r:
+        if x['Car']==d:
+            continue
+        pickle.dump(x,f)
+    f.close()
+ 
+while True: 
+    print("Type 1 to insert record")
+    print("Type 2 to read record")
+    print("Type 3 to search record")
+    print("Type 4 to update record")
+    print("Type 5 to delete record")
+    print("Enter your choice 0 to exit")
+    c=int(input("Enter your choice:"))
+    if c==0:
+        break
+    elif c==1:
+        insert()
+    elif c==2:
+        read()
+    elif c==3:
+        a=input("Enter car name to search")
+        search(a)
+    elif c==4:
+        r=int(input("Enter serial no:"))
+        m=input("Enter car name:")
+        update(r,m)
+    elif c==5:
+        d=input("enter car name")
+        delete(d)
+    a=input("continue?(y/n)")
+    if a.lower()=='n':
+        break
